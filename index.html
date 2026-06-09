@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+  <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MathSprint" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Math Sprint</title>
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ HOME ============ -->
+    <section class="view" id="view-home">
+      <header class="topbar">
+        <h1 class="brand">Math&nbsp;Sprint</h1>
+        <button class="icon-btn" id="btn-go-stats" aria-label="Stats">📈</button>
+      </header>
+
+      <div class="home-body">
+        <label class="field-label" for="preset-select">Preset</label>
+        <div class="preset-row">
+          <select id="preset-select" class="select"></select>
+          <button class="icon-btn" id="btn-edit-presets" aria-label="Manage presets">⚙️</button>
+        </div>
+
+        <div class="preset-summary card" id="home-summary">
+          <div class="stat">
+            <div class="stat-val" id="home-best">–</div>
+            <div class="stat-lbl">Best</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="home-avg">–</div>
+            <div class="stat-lbl">Recent avg</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="home-count">–</div>
+            <div class="stat-lbl">Sessions</div>
+          </div>
+        </div>
+
+        <div class="preset-desc" id="home-desc"></div>
+
+        <button class="btn-primary big" id="btn-start">Start</button>
+      </div>
+    </section>
+
+    <!-- ============ COUNTDOWN ============ -->
+    <section class="view hidden" id="view-countdown">
+      <div class="countdown-num" id="countdown-num">3</div>
+    </section>
+
+    <!-- ============ PLAY ============ -->
+    <section class="view hidden" id="view-play">
+      <div class="play-hud">
+        <div class="hud-item">
+          <div class="hud-val" id="play-time">2:00</div>
+          <div class="hud-lbl">time</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-val" id="play-score">0</div>
+          <div class="hud-lbl">score</div>
+        </div>
+        <button class="hud-quit" id="btn-quit" aria-label="Quit">✕</button>
+      </div>
+
+      <div class="problem-area" id="problem-area">
+        <div class="problem" id="problem">7 × 8</div>
+        <div class="answer" id="answer-display"><span class="caret"></span></div>
+      </div>
+
+      <div class="keypad" id="keypad">
+        <button class="key" data-k="1">1</button>
+        <button class="key" data-k="2">2</button>
+        <button class="key" data-k="3">3</button>
+        <button class="key" data-k="4">4</button>
+        <button class="key" data-k="5">5</button>
+        <button class="key" data-k="6">6</button>
+        <button class="key" data-k="7">7</button>
+        <button class="key" data-k="8">8</button>
+        <button class="key" data-k="9">9</button>
+        <button class="key key-util" data-k="back">⌫</button>
+        <button class="key" data-k="0">0</button>
+        <button class="key key-util" data-k="clear">C</button>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section class="view hidden" id="view-results">
+      <header class="topbar">
+        <button class="icon-btn" id="btn-results-home" aria-label="Home">‹</button>
+        <h1 class="brand">Results</h1>
+        <span class="icon-btn-spacer"></span>
+      </header>
+
+      <div class="results-body">
+        <div class="score-hero">
+          <div class="score-big" id="res-score">0</div>
+          <div class="score-sub" id="res-delta"></div>
+        </div>
+
+        <div class="preset-summary card">
+          <div class="stat">
+            <div class="stat-val" id="res-best">–</div>
+            <div class="stat-lbl">Best</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="res-avg">–</div>
+            <div class="stat-lbl">Recent avg</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="res-acc">–</div>
+            <div class="stat-lbl">Avg / Q</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Where to improve</h3>
+          <ul class="tips" id="res-tips"></ul>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" id="btn-replay">Play again</button>
+          <button class="btn-ghost" id="btn-change-preset">Change preset</button>
+        </div>
+        <button class="link-btn" id="btn-results-stats">View full stats →</button>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="view hidden" id="view-stats">
+      <header class="topbar">
+        <button class="icon-btn" id="btn-stats-home" aria-label="Home">‹</button>
+        <h1 class="brand">Stats</h1>
+        <span class="icon-btn-spacer"></span>
+      </header>
+
+      <div class="stats-body">
+        <label class="field-label" for="stats-preset-select">Preset</label>
+        <select id="stats-preset-select" class="select"></select>
+
+        <div class="preset-summary card">
+          <div class="stat">
+            <div class="stat-val" id="stats-best">–</div>
+            <div class="stat-lbl">Best</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="stats-avg">–</div>
+            <div class="stat-lbl">Recent avg</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="stats-count">–</div>
+            <div class="stat-lbl">Sessions</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Score over time</h3>
+          <div id="chart" class="chart"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Speed by operation</h3>
+          <div id="op-bars" class="op-bars"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Weak spots</h3>
+          <ul class="tips" id="stats-tips"></ul>
+        </div>
+
+        <button class="btn-ghost danger" id="btn-clear-preset">Clear this preset's history</button>
+      </div>
+    </section>
+
+    <!-- ============ PRESETS / EDIT ============ -->
+    <section class="view hidden" id="view-presets">
+      <header class="topbar">
+        <button class="icon-btn" id="btn-presets-home" aria-label="Home">‹</button>
+        <h1 class="brand">Presets</h1>
+        <button class="icon-btn" id="btn-new-preset" aria-label="New preset">＋</button>
+      </header>
+
+      <div class="presets-body">
+        <ul class="preset-list" id="preset-list"></ul>
+      </div>
+    </section>
+
+    <!-- ============ EDITOR ============ -->
+    <section class="view hidden" id="view-editor">
+      <header class="topbar">
+        <button class="icon-btn" id="btn-editor-cancel" aria-label="Cancel">‹</button>
+        <h1 class="brand" id="editor-title">Edit preset</h1>
+        <button class="icon-btn" id="btn-editor-save" aria-label="Save">✓</button>
+      </header>
+
+      <div class="editor-body">
+        <label class="field-label" for="ed-name">Name</label>
+        <input class="input" id="ed-name" type="text" maxlength="28" placeholder="My preset" />
+
+        <label class="field-label">Duration</label>
+        <div class="seg" id="ed-duration">
+          <button class="seg-btn" data-dur="30">30s</button>
+          <button class="seg-btn" data-dur="60">60s</button>
+          <button class="seg-btn" data-dur="120">120s</button>
+          <button class="seg-btn" data-dur="300">5min</button>
+        </div>
+
+        <div class="op-block">
+          <div class="op-head">
+            <label class="switch"><input type="checkbox" id="ed-add-on" /><span class="slider"></span></label>
+            <span class="op-name">Addition  a + b</span>
+          </div>
+          <div class="range-grid" id="ed-add-ranges">
+            <div><span class="rl">a from</span><input class="num" id="ed-add-amin" type="number" inputmode="numeric"></div>
+            <div><span class="rl">to</span><input class="num" id="ed-add-amax" type="number" inputmode="numeric"></div>
+            <div><span class="rl">b from</span><input class="num" id="ed-add-bmin" type="number" inputmode="numeric"></div>
+            <div><span class="rl">to</span><input class="num" id="ed-add-bmax" type="number" inputmode="numeric"></div>
+          </div>
+        </div>
+
+        <div class="op-block">
+          <div class="op-head">
+            <label class="switch"><input type="checkbox" id="ed-sub-on" /><span class="slider"></span></label>
+            <span class="op-name">Subtraction  (a+b) − b</span>
+          </div>
+          <p class="op-note">Uses the addition ranges, reversed (answers stay ≥ 0).</p>
+        </div>
+
+        <div class="op-block">
+          <div class="op-head">
+            <label class="switch"><input type="checkbox" id="ed-mul-on" /><span class="slider"></span></label>
+            <span class="op-name">Multiplication  a × b</span>
+          </div>
+          <div class="range-grid" id="ed-mul-ranges">
+            <div><span class="rl">a from</span><input class="num" id="ed-mul-amin" type="number" inputmode="numeric"></div>
+            <div><span class="rl">to</span><input class="num" id="ed-mul-amax" type="number" inputmode="numeric"></div>
+            <div><span class="rl">b from</span><input class="num" id="ed-mul-bmin" type="number" inputmode="numeric"></div>
+            <div><span class="rl">to</span><input class="num" id="ed-mul-bmax" type="number" inputmode="numeric"></div>
+          </div>
+        </div>
+
+        <div class="op-block">
+          <div class="op-head">
+            <label class="switch"><input type="checkbox" id="ed-div-on" /><span class="slider"></span></label>
+            <span class="op-name">Division  (a×b) ÷ b</span>
+          </div>
+          <p class="op-note">Uses the multiplication ranges, reversed (whole-number answers).</p>
+        </div>
+
+        <button class="btn-ghost danger" id="btn-editor-delete">Delete preset</button>
+      </div>
+    </section>
+
+    <!-- flash overlay -->
+    <div id="flash" class="flash"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

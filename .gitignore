@@ -1,0 +1,6 @@
+.DS_Store
+.bg-shell/
+.gsd/
+.claude/
+*.log
+node_modules/
