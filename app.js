@@ -250,14 +250,16 @@
         keystrokes: game.qKeystrokes,
         digits: String(game.current.answer).length,
       });
-      flash();
-      nextQuestion();
+      nextQuestion();   // paint the next problem first so input never stalls
+      flash();          // confirmation flash is non-blocking (composited)
     }
   }
 
   function flash() {
     const f = el('flash');
-    f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+    f.classList.remove('go');
+    // restart the CSS animation on the next frame without a forced sync reflow
+    requestAnimationFrame(() => requestAnimationFrame(() => f.classList.add('go')));
   }
 
   function endGame() {

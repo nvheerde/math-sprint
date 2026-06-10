@@ -129,13 +129,16 @@ html, body {
 .keypad {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 10px; flex: 0 0 auto; padding-top: 8px;
+  touch-action: manipulation;
 }
 .key {
   background: var(--key-bg); color: var(--text); border: 1px solid var(--border);
   border-radius: 16px; font-size: 30px; font-weight: 600;
   height: clamp(58px, 9.5vh, 84px); cursor: pointer;
-  font-variant-numeric: tabular-nums; user-select: none;
-  transition: background 0.04s, transform 0.04s;
+  font-variant-numeric: tabular-nums; user-select: none; -webkit-user-select: none;
+  /* touch-action does NOT inherit — set it here so iOS skips the double-tap-zoom wait */
+  touch-action: manipulation;
+  transition: transform 0.05s ease;
 }
 .key.pressed { background: var(--key-bg-active); transform: scale(0.96); }
 .key-util { color: var(--text-dim); font-size: 24px; }

@@ -1,5 +1,5 @@
 /* Service worker — cache-first for offline use. Bump CACHE on each release. */
-const CACHE = 'mathsprint-v1';
+const CACHE = 'mathsprint-v2';
 const ASSETS = [
   './',
   './index.html',
